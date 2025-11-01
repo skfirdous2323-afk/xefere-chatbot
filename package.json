@@ -7,14 +7,15 @@
     "dev": "vite",
     "build": "vite build",
     "preview": "vite preview",
-    "start": "vite preview --port $PORT --host",
+    "start": "npm run build && npx serve -s dist -l $PORT",
     "predeploy": "npm run build",
     "deploy": "gh-pages -d dist"
   },
   "dependencies": {
     "framer-motion": "^12.23.24",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0"
+    "react-dom": "^18.2.0",
+    "serve": "^14.2.5"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4.1.16",
