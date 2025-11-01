@@ -3,8 +3,10 @@ import react from "@vitejs/plugin-react";
 
 export default defineConfig({
   plugins: [react()],
-  server: {
-    allowedHosts: ['xefere-chatbot.onrender.com'], // ✅ ye line add karo
+  preview: {
+    allowedHosts: ["xefere-chatbot.onrender.com"], // ✅ allow your Render domain
+    port: 5173,
+    host: true,
   },
 });
 
