@@ -65,24 +65,21 @@ function App() {
                     {msg.products.map((p, idx) => (
                       <div key={idx} className="product-card">
                         <div className="thumb">
-                          <img src={p.image} alt={p.title} />
-                        </div>
-                        <div className="product-details">
-                          <h3>{p.title}</h3>
-                          <p>₹{p.price}</p>
-                          <button
-                            onClick={() => window.open(p.link, "_blank")}
-                          >
-                            View Product
-                          </button>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
-            ))}
-
+                          <img src={p.image || "https://via.placeholder.com/150"} alt={p.title} />
+        </div>
+        <div className="product-details">
+          <h3>{p.title}</h3>
+          <p>{p.price}</p>
+          <p>{p.available}</p>
+          <p>{p.shortDescription}</p>
+          <button onClick={() => window.open(p.link, "_blank")}>
+            View Product
+          </button>
+        </div>
+      </div>
+    ))}
+  </div>
+)}
             {isLoading && <p className="loading">Bot is typing...</p>}
           </div>
 
