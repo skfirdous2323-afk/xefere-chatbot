@@ -57,7 +57,12 @@ function App() {
                   msg.sender === "user" ? "user-message" : "bot-message"
                 }`}
               >
-                <p>{msg.text}</p>
+
+
+
+                {msg.products && msg.products.length > 0 ? null : <p>{msg.text}</p>}
+
+
 
                 {/* Product Cards */}
                 {msg.products && msg.products.length > 0 && (
