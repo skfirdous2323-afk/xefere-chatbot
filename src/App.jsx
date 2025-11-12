@@ -1,17 +1,20 @@
 import React, { useState } from "react";
 import "./App.css";
 import logo from "./assets/whatsapp.svg";
+
 function App() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState([]);
   const [userInput, setUserInput] = useState("");
-const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+
   const sendMessage = async () => {
     if (!userInput.trim()) return;
 
     const newMessages = [...messages, { sender: "user", text: userInput }];
     setMessages(newMessages);
     setUserInput("");
+    setIsLoading(true);
 
     try {
       const res = await fetch(`${import.meta.env.VITE_API_BASE_URL}/smart`, {
@@ -20,37 +23,32 @@ const [isLoading, setIsLoading] = useState(false);
         body: JSON.stringify({ message: userInput }),
       });
       const data = await res.json();
-      setMessages([...newMessages, { sender: "bot", text: data.reply }]);
+      setMessages([
+        ...newMessages,
+        { sender: "bot", text: data.reply, products: data.products || [] },
+      ]);
     } catch (err) {
       setMessages([
         ...newMessages,
         { sender: "bot", text: "⚠️ Error connecting to server" },
       ]);
+    } finally {
+      setIsLoading(false);
     }
   };
 
   return (
     <>
-{isLoading && (
-  <div className="flex justify-center my-2">
-    <div className="animate-bounce text-gray-500">🤖 Thinking...</div>
-  </div>
-)}
-
+      {/* Chat Toggle Button */}
       <div className="chat-button" onClick={() => setIsOpen(!isOpen)}>
         <img src={logo} alt="Chat" />
       </div>
 
-{isLoading && (
-  <div className="flex justify-center items-center my-2 space-x-2">
-    <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce"></div>
-    <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce delay-100"></div>
-    <div className="w-2 h-2 bg-green-500 rounded-full animate-bounce delay-200"></div>
-  </div>
-)}
+      {/* Chat Window */}
       {isOpen && (
         <div className="chat-window">
           <div className="chat-header">💬 Xefere Assistant</div>
+
           <div className="chat-body">
             {messages.map((msg, i) => (
               <div
@@ -59,10 +57,36 @@ const [isLoading, setIsLoading] = useState(false);
                   msg.sender === "user" ? "user-message" : "bot-message"
                 }`}
               >
-                {msg.text}
+                <p>{msg.text}</p>
+
+                {/* Product Cards */}
+                {msg.products && msg.products.length > 0 && (
+                  <div className="product-grid">
+                    {msg.products.map((p, idx) => (
+                      <div key={idx} className="product-card">
+                        <div className="thumb">
+                          <img src={p.image} alt={p.title} />
+                        </div>
+                        <div className="product-details">
+                          <h3>{p.title}</h3>
+                          <p>₹{p.price}</p>
+                          <button
+                            onClick={() => window.open(p.link, "_blank")}
+                          >
+                            View Product
+                          </button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+                )}
               </div>
             ))}
+
+            {isLoading && <p className="loading">Bot is typing...</p>}
           </div>
+
+          {/* Input Area */}
           <div className="chat-input">
             <input
               type="text"
@@ -80,8 +104,4 @@ const [isLoading, setIsLoading] = useState(false);
 }
 
 export default App;
-
-
-
-
 
